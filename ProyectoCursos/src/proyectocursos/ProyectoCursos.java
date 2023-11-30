@@ -17,6 +17,7 @@ public class ProyectoCursos {
         // TODO code application logic here
         System.out.println("Comiezo el proyecto");
         System.out.println("Holaaaaaa");
+        System.out.println("hola");
     }
     
 }
