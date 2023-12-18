@@ -7,22 +7,41 @@ package gestioncursos.Modelo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Diurno
  */
 public class ConexionSQLServer {
-        private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=GestionCursos";
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=GestionCursos";
     private static final String USUARIO = "C06PC27\\Diurno";
     private static final String CONTRASENA = "";
+    Connection c;
+    //Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-    public Connection getConnection() throws SQLException {
+    public ConexionSQLServer() {
+    }
+    
+    public Connection getConnection(){
+        if(c==null){
+            System.out.println("Conectado");
+            try {
+                c= DriverManager.getConnection(URL, USUARIO, CONTRASENA);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConexionSQLServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        return c;
+    }
+    
+    public void desconectar(){
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            return DriverManager.getConnection(URL, USUARIO, CONTRASENA);
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("Error al cargar el controlador JDBC: " + e.getMessage());
+            c.close();
+            c=null;
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionSQLServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
