@@ -4,6 +4,8 @@
  */
 package gestioncursos.Controlador;
 
+import gestioncursos.Modelo.AccesoDAO;
+import gestioncursos.Vista.Vista;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,26 +17,43 @@ import java.awt.event.KeyListener;
  */
 public class ControladorSQLServer implements ActionListener, KeyListener{
     
-    gestioncursos.Vista.Vista view;
-    gestioncursos.Modelo.AccesoDAO modelo;
+    Vista ventana;
+    AccesoDAO empDAO;
 
     public ControladorSQLServer(gestioncursos.Vista.Vista view, gestioncursos.Modelo.AccesoDAO modelo) {
-        this.view = view;
-        this.modelo = modelo;
-        añadirKeyListener(this);
+        this.ventana = view;
+        this.empDAO = modelo;
+        añadirAcionListener(this);
+    }
+    
+    private void añadirAcionListener(ActionListener lis) {
+        ventana.btnBorrarCurso.addActionListener(lis);
+        ventana.btnBorrarEmpleado.addActionListener(lis);
+        ventana.btnEnviarCurso.addActionListener(lis);
+        ventana.btnEnviarEmpleado.addActionListener(lis);
+        ventana.btnMostrarCursos.addActionListener(lis);
+        ventana.btnMostrarEmpleados.addActionListener(lis);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-         /* String action= e.getActionCommand();
+         String action= e.getActionCommand();
           switch (action) {
-            case "Consultar":
-                String localidad= view.txtLocalidad.getText();
-                model.queryTable("departamentos");
+            case "Insertar Empleado":
+                break;
+            case "Insertar Curso":
+                break;
+            case "Borrar Empleado":
+                break;
+            case "Borrar Curso":
+                break;
+            case "Mostrar datos Empleados":
+                break;
+            case "Mostrar datos Cursos":
                 break;
             default:
                 throw new AssertionError();
-        }*/
+        }
     }
 
     @Override
@@ -50,10 +69,6 @@ public class ControladorSQLServer implements ActionListener, KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void añadirAcionListener(ActionListener lis) {
-
     }
 
     private void añadirKeyListener(KeyListener kl) {
