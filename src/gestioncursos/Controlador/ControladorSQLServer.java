@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,12 +19,14 @@ import java.awt.event.KeyListener;
 public class ControladorSQLServer implements ActionListener, KeyListener{
     
     Vista ventana;
-    AccesoDAO empDAO;
+    AccesoDAO modelo;
 
     public ControladorSQLServer(gestioncursos.Vista.Vista view, gestioncursos.Modelo.AccesoDAO modelo) {
         this.ventana = view;
-        this.empDAO = modelo;
+        this.modelo = modelo;
         añadirAcionListener(this);
+        cargaE();
+        cargaC();
     }
     
     private void añadirAcionListener(ActionListener lis) {
@@ -40,19 +43,43 @@ public class ControladorSQLServer implements ActionListener, KeyListener{
          String action= e.getActionCommand();
           switch (action) {
             case "Insertar Empleado":
+                modelo.instertarEmpleado(ventana.nombreE.getText(), ventana.apellidoE.getText(), 
+                        Integer.valueOf(ventana.idE.getText()), Integer.valueOf(ventana.idCurso.getText()), Integer.valueOf(ventana.salarioE.getText()));
                 break;
             case "Insertar Curso":
+                modelo.instertarCurso(ventana.nombreE.getText(), Integer.valueOf(ventana.idC.getText()), 
+                        Integer.valueOf(ventana.numC.getText()));
                 break;
             case "Borrar Empleado":
+                modelo.borrarEmpleado(Integer.valueOf(ventana.idBorrarE.getText()));
                 break;
             case "Borrar Curso":
+                modelo.borrarCurso(Integer.valueOf(ventana.idBorrarC.getText()));
                 break;
             case "Mostrar datos Empleados":
+                ventana.txtMostrar.setText(modelo.mostrarEmpleado(Integer.valueOf(ventana.cEmpleados.getSelectedItem().toString())));
                 break;
             case "Mostrar datos Cursos":
+                ventana.txtMostrar.setText(modelo.mostrarCurso(Integer.valueOf(ventana.cCurso.getSelectedItem().toString())));
                 break;
             default:
                 throw new AssertionError();
+        }
+    }
+    
+    public void cargaE() {
+        ventana.cEmpleados.removeAllItems();
+        ArrayList<String> empleados = modelo.recorrerClientes();
+        for (String cliente : empleados) {
+            ventana.cEmpleados.addItem(cliente);
+        }
+    }
+
+    public void cargaC() {
+        ventana.cCurso.removeAllItems();
+        ArrayList<Integer> curso = modelo.idC();
+        for (int id : curso) {
+            ventana.cCurso.addItem(id + "");
         }
     }
 

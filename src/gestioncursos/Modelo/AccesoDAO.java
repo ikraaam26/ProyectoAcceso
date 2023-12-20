@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,9 +27,7 @@ public class AccesoDAO {
                 
          if (conexion!= null) {
              System.out.println("Conectado"); 
-        }
-         //con.desconectar();
-    
+        }    
 }
     
     public void desconectar(){
@@ -67,10 +66,12 @@ public class AccesoDAO {
         }
     }
     
-    public void mostrarEmpleado(){
+    public String mostrarEmpleado(int id){
+            String cadena="";
         try {
-            String query = "SELECT * FROM empleado";
+            String query = "SELECT * FROM empleado WHERE id=?";
             PreparedStatement sentencia= conexion.prepareStatement(query);
+            sentencia.setInt(1, id);
             ResultSet resultSet = sentencia.executeQuery();
             while (resultSet.next()) {
                 String columna1 = resultSet.getString("nombre");
@@ -78,25 +79,32 @@ public class AccesoDAO {
                 int columna3 = resultSet.getInt("id");
                 int columna4 = resultSet.getInt("id_curso");
                 int columna5 = resultSet.getInt("salario");
+                cadena+="Empleado{" + "nombre= " + columna1 + ", apellido= " + columna2 + ", id= " + columna3 + ", id_curso= " 
+                        + columna4 + ", salario= " + columna5 + '}';
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccesoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return cadena;
     }
     
-    public void mostrarCurso(){
+    public String mostrarCurso(int id){
+        String cadena="";
         try {
-            String query = "SELECT * FROM curso";
+            String query = "SELECT * FROM curso WHERE id=?";
             PreparedStatement sentencia= conexion.prepareStatement(query);
+            sentencia.setInt(1, id);
             ResultSet resultSet = sentencia.executeQuery();
             while (resultSet.next()) {
                 String columna1 = resultSet.getString("nombre");
                 int columna2 = resultSet.getInt("id");
                 int columna3 = resultSet.getInt("numEmpleado");
+                cadena+= "Curso{" + "nombre= " + columna1 + ", id= " + columna2 + ", numEmpleados= " + columna3 + '}';
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccesoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return cadena;
     }
     
     
@@ -140,4 +148,34 @@ public class AccesoDAO {
         } 
     }
      
+    public ArrayList<String> recorrerClientes() {
+        ArrayList<String> empleados = new ArrayList<>();
+        try {
+            String consulta = "SELECT nombre FROM empleado";
+            Statement sentencia = conexion.createStatement();
+            ResultSet rs = sentencia.executeQuery(consulta);
+            while (rs.next()) {
+                empleados.add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccesoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return empleados;
+    }
+    
+    public ArrayList idC() {
+        String consulta = "SELECT id FROM curso";
+        ArrayList<Integer> lista = new ArrayList<>();
+        try {
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            ResultSet resultado = sentencia.executeQuery();
+            while (resultado.next()) {
+                lista.add(resultado.getInt(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccesoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lista;
+    }
+    
 }
